@@ -1,0 +1,7 @@
+[Unit]
+Description=Sync with gdrive
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rclone copy {{ gdrive_local }} gdrive:{{ gdrive_remote }} -u -v
+ExecStart=/usr/bin/rclone copy gdrive:{{ gdrive_remote }} {{ gdrive_local }} -u -v

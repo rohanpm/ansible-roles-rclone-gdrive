@@ -1,0 +1,47 @@
+---
+- name: Ensure rclone installed
+  package:
+    name: rclone
+    state: present
+  become: yes
+
+- name: Create gdrive config
+  command: rclone config create gdrive drive
+  args:
+    creates: "{{ lookup('env', 'HOME') }}/.config/rclone/rclone.conf"
+
+- name: Create local dir for sync
+  file:
+    name: "{{ gdrive_local }}"
+    state: directory
+
+- name: Create symlinks for sync
+  file:
+    src: "{{ gdrive_local }}/{{ item }}"
+    name: "{{ lookup('env', 'HOME') }}/{{ item }}"
+    state: link
+    force: yes
+  with_items: "{{ gdrive_links }}"
+
+- name: Ensure systemd directory exists
+  file:
+    name: "{{ lookup('env', 'HOME') }}/.config/systemd/user/"
+    state: directory
+
+- name: Deploy user service
+  template:
+    src: rclone-gdrive.service.j2
+    dest: "{{ lookup('env', 'HOME') }}/.config/systemd/user/rclone-gdrive.service"
+
+- name: Deploy user timer
+  template:
+    src: rclone-gdrive.timer.j2
+    dest: "{{ lookup('env', 'HOME') }}/.config/systemd/user/rclone-gdrive.timer"
+
+- name: Enable user timer
+  systemd:
+    user: yes
+    name: rclone-gdrive.timer
+    enabled: yes
+    state: started
+    daemon_reload: yes

@@ -1,0 +1,5 @@
+---
+gdrive_local: "{{ lookup('env', 'HOME') }}/gdrive"
+gdrive_remote: synced
+gdrive_links:
+- Documents

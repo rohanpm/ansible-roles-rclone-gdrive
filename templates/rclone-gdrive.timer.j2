@@ -1,0 +1,6 @@
+[Unit]
+Description=Sync with gdrive periodically
+
+[Timer]
+OnUnitInactiveSec={{ gdrive_sync_interval|default('4h') }}
+Persistent=true
