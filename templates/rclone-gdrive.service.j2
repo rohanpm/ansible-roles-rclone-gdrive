@@ -3,4 +3,6 @@ Description=Sync with gdrive
 
 [Service]
 Type=simple
-ExecStart=/bin/sh -c "/usr/bin/rclone copy {{ gdrive_local }} gdrive:{{ gdrive_remote }} -u -v && exec /usr/bin/rclone copy gdrive:{{ gdrive_remote }} {{ gdrive_local }} -u -v"
+ExecStart=/bin/sh -c "\
+  /usr/bin/rclone copy {{ gdrive_local }} gdrive:{{ gdrive_remote }} -u -v --exclude-from ~/.config/gdrive-excludes && \
+  exec /usr/bin/rclone copy gdrive:{{ gdrive_remote }} {{ gdrive_local }} -u -v --exclude-from ~/.config/gdrive-excludes"

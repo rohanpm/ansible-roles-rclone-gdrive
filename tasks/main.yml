@@ -10,6 +10,11 @@
   args:
     creates: "{{ lookup('env', 'HOME') }}/.config/rclone/rclone.conf"
 
+- name: Deploy gdrive excludes
+  template:
+    src: gdrive-excludes.j2
+    dest: ~/.config/gdrive-excludes
+
 - name: Create local dir for sync
   file:
     name: "{{ gdrive_local }}"
